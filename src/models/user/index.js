@@ -56,8 +56,8 @@ const getUserByEmail = async (email) => {
     } = await USER_COLLECTION.where('email', '==', email).get();
 
     // Get the first user found
-    const _user = docs.length ? docs[0] : {};
-    return _user.data();
+    const _user = docs.length ? docs[0].data() : {};
+    return _user;
 }
 
 // Get multiple users
