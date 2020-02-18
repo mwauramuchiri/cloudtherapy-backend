@@ -9,6 +9,8 @@ const MESSAGE_COLLECTION = db.collection('messages');
 
 // Filter out chat data and only return fields that we expect in the database
 const _filterChatData = (chatData) => {
+    if (!chatData.initiator || !chatData.prospect) return chatData;
+
     // Initiator data to exclude from chat
     delete chatData.initiator.email;
     delete chatData.initiator.isNew;
@@ -52,12 +54,12 @@ const createChat = async (chatData) => {
 };
 
 /** Update chat */
-const updateChat = (chatId, updateData) => {
-    updateData.isNew = false;
+const updateChat = (chatId, chatData) => {
+    chatData.isNew = false;
     chatData.dateUpdated = FieldValue.serverTimestamp();
-    updateData = _filterChatData(updateData);
+    chatData = _filterChatData(chatData);
 
-    return CHAT_COLLECTION.doc(chatId).set(updateData, {
+    return CHAT_COLLECTION.doc(chatId).set(chatData, {
         merge: true
     });
 }
@@ -91,6 +93,16 @@ const unmatch = async (chatId) => {
  */
 const sendMessage = async (messageData) => {
     messageData.dateSent = FieldValue.serverTimestamp();
+
+    const chatId = messageData.chatId;
+    let chatUpdateData = {
+        lastMessage: messageData
+    };
+
+    delete chatUpdateData.chatId;
+
+    // Update the affected chat with last message
+    updateChat(chatId, chatUpdateData);
 
     return MESSAGE_COLLECTION.doc().set(messageData, {
         merge: true
