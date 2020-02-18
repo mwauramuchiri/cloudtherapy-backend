@@ -44,6 +44,7 @@ const _filterMessageData = (messageData) => {
 const createChat = async (chatData) => {
     chatData.isNew = true;
     chatData.dateAdded = FieldValue.serverTimestamp();
+    chatData.dateUpdated = FieldValue.serverTimestamp();
     chatData = _filterChatData(chatData);
 
     const _insertStatus = CHAT_COLLECTION.doc().set(chatData);
@@ -53,6 +54,7 @@ const createChat = async (chatData) => {
 /** Update chat */
 const updateChat = (chatId, updateData) => {
     updateData.isNew = false;
+    chatData.dateUpdated = FieldValue.serverTimestamp();
     updateData = _filterChatData(updateData);
 
     return CHAT_COLLECTION.doc(chatId).set(updateData, {

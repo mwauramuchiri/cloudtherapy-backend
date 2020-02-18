@@ -4,7 +4,6 @@ const ChatModel = require('../../models/chat');
  * @param {Object} participantIds an array containing the chat participants
  */
 const createChat = async (participantIds) => {
-    console.log(participantIds);
     const insertData = {
         participantIds
     };
