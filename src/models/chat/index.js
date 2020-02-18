@@ -9,10 +9,27 @@ const MESSAGE_COLLECTION = db.collection('messages');
 
 // Filter out chat data and only return fields that we expect in the database
 const _filterChatData = (chatData) => {
-    let filteredData = chatData;
-    //TODO: Add implementation
+    // Initiator data to exclude from chat
+    delete chatData.initiator.email;
+    delete chatData.initiator.isNew;
+    delete chatData.initiator.provider;
+    delete chatData.initiator.signInMethod;
+    delete chatData.initiator.emailVerified;
+    delete chatData.initiator.dateCreated;
+    delete chatData.initiator.dateUpdated;
+    delete chatData.initiator.isBanned;
 
-    return filteredData;
+    // Prospect data to exclude from chat
+    delete chatData.prospect.email;
+    delete chatData.prospect.isNew;
+    delete chatData.prospect.provider;
+    delete chatData.prospect.signInMethod;
+    delete chatData.prospect.emailVerified;
+    delete chatData.prospect.dateCreated;
+    delete chatData.prospect.dateUpdated;
+    delete chatData.prospect.isBanned;
+
+    return chatData;
 };
 
 // Filter out message data and only return fields that we expect in the database
@@ -23,15 +40,25 @@ const _filterMessageData = (messageData) => {
     return filteredData;
 };
 
-// Create chat
-const createChat = async (insertData) => {
-    // console.log(`insert data: `);
-    // console.log(insertData);
-    // console.log(`\n\n\n\n`);
-    insertData.dateAdded = FieldValue.serverTimestamp();
+// Create chat ~ return the sanitized chat data
+const createChat = async (chatData) => {
+    chatData.isNew = true;
+    chatData.dateAdded = FieldValue.serverTimestamp();
+    chatData = _filterChatData(chatData);
 
-    return CHAT_COLLECTION.doc().set(insertData);
+    const _insertStatus = CHAT_COLLECTION.doc().set(chatData);
+    return chatData;
 };
+
+/** Update chat */
+const updateChat = (chatId, updateData) => {
+    updateData.isNew = false;
+    updateData = _filterChatData(updateData);
+
+    return CHAT_COLLECTION.doc(chatId).set(updateData, {
+        merge: true
+    });
+}
 
 /** Unmatch - hide chats as well as messages belonging to that chat
  * @param {Object} chatId - id of the chat to hide
@@ -68,12 +95,12 @@ const sendMessage = async (messageData) => {
     });
 };
 
-//TODO: Update chat
 //TODO: Update messages
 //TODO: Delete messages
 
 module.exports = {
     createChat,
+    updateChat,
     unmatch,
     sendMessage
 }

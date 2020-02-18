@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const ChatMiddleware = require("../../middleware/chat");
+const {
+    ChatMiddleware
+} = require("../../middleware");
 
 // Create chat
 router.post('/', ChatMiddleware.createChat);
