@@ -9,11 +9,13 @@ const USER_COLLECTION = db.collection('users');
 
 
 //* FUNCTIONS
-const _filterUserData = (userData) => {
-    let filteredData = userData;
-    //TODO: Add implementation
+const _filterUserData = (userData, isAdmin = false) => {
+    delete userData.dateCreated;
+    if (!isAdmin) {
+        delete userData.isBanned;
+    }
 
-    return filteredData;
+    return userData;
 };
 
 // Create useruser

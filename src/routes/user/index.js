@@ -8,5 +8,8 @@ const {
 // Get a user
 router.get('/:uid', UserMiddleware.getUser);
 
+// Update a user
+router.patch('/:uid', UserMiddleware.updateUser);
+
 
 module.exports = router;

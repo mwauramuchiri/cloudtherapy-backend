@@ -8,6 +8,15 @@ const getUserById = async (uid) => {
     return UserModel.getUserById(uid);
 }
 
+/** Update user
+ *  @param {String} uid The id of the user to get
+ *  @param {Object} updateData New user data - update the user with this
+ */
+const updateUser = async (uid, updateData) => {
+    return UserModel.updateUser(uid, updateData);
+};
+
 module.exports = {
-    getUserById
+    getUserById,
+    updateUser
 }
