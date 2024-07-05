@@ -47,15 +47,10 @@ app.use((req, res, next) => {
 
 // Misc errors
 app.use((error, req, res, next) => {
-    if (!res.headersSent) {
-        res.status(error.status || 500);
-        res.json({
-            message: error.message
-        });
-    } else {
-        // Handle the error differently if headers are already sent
-        console.error("Error occurred after response was sent:", error);
-    }
+    // console.log(error.status);
+    res.status(error.status || 500).json({
+        message: error.message
+    });
 });
 
 // Exports
