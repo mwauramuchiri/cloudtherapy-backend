@@ -8,12 +8,13 @@ const authUser = (req, res, next) => {
         ...req.body.data.user
     };
 
+    // console.log('middleware::authUser');
+
     Api.attachErrorHandler(res,
         Auth.authUser(userData).then(() => {
             const response = Api.getResponse(true, "Successfully authenticated user", null);
 
             res.status(response.statusCode).json(response);
-            next();
         })
     );
 };

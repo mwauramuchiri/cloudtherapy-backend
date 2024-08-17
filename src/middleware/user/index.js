@@ -5,10 +5,10 @@ const Api = require('../../utils/api');
 const getUser = (req, res, next) => {
     Api.attachErrorHandler(res,
         User.getUserById(req.params.uid).then((user) => {
+            // console.log(user);
             const response = Api.getResponse(true, "Successfully retrieved user", user);
 
             res.status(response.statusCode).json(response);
-            next();
         })
     );
 };
@@ -20,7 +20,6 @@ const updateUser = (req, res, next) => {
             const response = Api.getResponse(true, "Successfully updated user");
 
             res.status(response.statusCode).json(response);
-            next();
         })
     )
 }
